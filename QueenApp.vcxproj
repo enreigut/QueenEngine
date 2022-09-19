@@ -24,6 +24,7 @@
     <ProjectGuid>{8b87f1ca-959c-4818-a51d-f34a5132fc76}</ProjectGuid>
     <RootNamespace>QueenApp</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>QueenEngine</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -151,12 +152,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Application\Application.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Utilities\Application.cpp" />
+    <ClCompile Include="src\Managers\WindowManager.cpp" />
+    <ClCompile Include="src\Renderer\ElementBuffer.cpp" />
+    <ClCompile Include="src\Renderer\Shader.cpp" />
+    <ClCompile Include="src\Renderer\VertexArrayObject.cpp" />
+    <ClCompile Include="src\Renderer\VertexBuffer.cpp" />
+    <ClCompile Include="src\Utilities\FileReader.cpp" />
     <ClCompile Include="src\Utilities\ImGuiApi.cpp" />
     <ClCompile Include="src\Utilities\Logger.cpp" />
     <ClCompile Include="src\Utilities\Timer.cpp" />
-    <ClCompile Include="src\Utilities\Window.cpp" />
     <ClCompile Include="Vendor\include\IMGUI\imgui.cpp" />
     <ClCompile Include="Vendor\include\IMGUI\imgui_demo.cpp" />
     <ClCompile Include="Vendor\include\IMGUI\imgui_draw.cpp" />
@@ -166,11 +172,18 @@
     <ClCompile Include="Vendor\include\IMGUI\imgui_widgets.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Utilities\Application.h" />
+    <ClInclude Include="src\Application\Application.h" />
+    <ClInclude Include="src\Managers\Manager.h" />
+    <ClInclude Include="src\Managers\WindowManager.h" />
+    <ClInclude Include="src\Renderer\ElementBuffer.h" />
+    <ClInclude Include="src\Renderer\VertexArrayObject.h" />
+    <ClInclude Include="src\Renderer\Buffer.h" />
+    <ClInclude Include="src\Renderer\Shader.h" />
+    <ClInclude Include="src\Renderer\VertexBuffer.h" />
+    <ClInclude Include="src\Utilities\FileReader.h" />
     <ClInclude Include="src\Utilities\ImGuiApi.h" />
     <ClInclude Include="src\Utilities\Logger.h" />
     <ClInclude Include="src\Utilities\Timer.h" />
-    <ClInclude Include="src\Utilities\Window.h" />
     <ClInclude Include="Vendor\include\GLFW\glfw3.h" />
     <ClInclude Include="Vendor\include\GLFW\glfw3native.h" />
     <ClInclude Include="Vendor\include\GL\eglew.h" />
@@ -191,6 +204,10 @@
     <Library Include="Vendor\lib\glew32.lib" />
     <Library Include="Vendor\lib\glew32s.lib" />
     <Library Include="Vendor\lib\glfw3.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Shaders\fragment.frag" />
+    <None Include="Assets\Shaders\vertex.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

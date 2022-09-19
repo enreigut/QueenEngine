@@ -1,34 +1,13 @@
 #include <iostream>
-#include "Utilities/Application.h"
-
-void BenchmarkWindow(Application& app)
-{
-	float ms = app.GetFrameDuration();
-
-	ImGui::Begin("Benchmarking");
-
-	ImGui::Text("%f ms", ms);
-	ImGui::Text("%f FPS", 1 / ms);
-
-	ImGui::End();
-}
-
+#include "Application/Application.h"
 
 int main()
 {
-	static Application app;
-	app.CreateApplication();
-
-	while (app.IsRunning())
-	{
-		app.StartUpdate();
-
-		BenchmarkWindow(app);
-
-		app.LateUpdate();
-	}
-
-	app.Clean();
+	static Queen::Application queenEgine;
+	queenEgine.StartManagers();
+	queenEgine.CreateApplication();
+	queenEgine.Run();
+	queenEgine.Shutdown();
 
 	return 0;
 }
