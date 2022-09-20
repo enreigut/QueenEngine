@@ -192,6 +192,7 @@
     <ClInclude Include="src\Renderer\Buffer.h" />
     <ClInclude Include="src\Renderer\Shader.h" />
     <ClInclude Include="src\Renderer\VertexBuffer.h" />
+    <ClInclude Include="src\Renderer\Viewport.h" />
     <ClInclude Include="src\Scenes\Scene.h" />
     <ClInclude Include="src\Utilities\FileReader.h" />
     <ClInclude Include="src\Utilities\ImGuiApi.h" />

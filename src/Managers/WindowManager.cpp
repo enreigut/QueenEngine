@@ -11,10 +11,11 @@ namespace Queen
 		// Callbacks
 		void Window_size_callback(GLFWwindow* window, int width, int height)
 		{
-			wndManager->SetWidth(width);
+			// TODO: Fix when editor is not used
+			/*wndManager->SetWidth(width);
 			wndManager->SetHeight(height);
 			wndManager->SetAspectRatio((float) wndManager->GetWidth() / (float) wndManager->GetHeight());
-			glViewport(0, 0, wndManager->GetWidth(), wndManager->GetHeight());
+			glViewport(0, 0, wndManager->GetWidth(), wndManager->GetHeight());*/
 		}
 
 		WindowManager::WindowManager()

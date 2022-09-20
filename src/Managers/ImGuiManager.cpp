@@ -4,6 +4,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include <stdio.h>
+
 namespace Queen
 {
 	namespace Managers
@@ -135,27 +137,35 @@ namespace Queen
 			ImGui::End();
 		}
 
-		void ImGuiManager::Viewport(Managers::Viewport& vp, Renderer::FrameBuffer& fbo)
+		void ImGuiManager::Viewport(Queen::Viewport& vp, Renderer::FrameBuffer& fbo)
 		{
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 			
 			ImGui::Begin("Viewport");
 			
 			ImVec2 vwSize = ImGui::GetContentRegionAvail();
+			vp.x = vwSize.x;
+			vp.y = vwSize.y;
 
-			if (vwSize.x != m_viewportWidth || vwSize.y != m_viewportHeight)
+			if (
+				vwSize.x > 0.0f && 
+				vwSize.y > 0.0f &&
+				(vwSize.x != vp.x || vwSize.y != vp.y)
+			)
 			{
-				m_viewportWidth = vwSize.x;
-				m_viewportHeight = vwSize.y;
-				vp.width = m_viewportWidth;
-				vp.height = m_viewportHeight;
-				glViewport(0, 0, vp.width, vp.height);
-				fbo.CreateFrameBuffer(m_viewportWidth, m_viewportHeight);
-			}
+				vp.x = vwSize.x;
+				vp.y = vwSize.y;
 
+				printf("%f", vp.x);
+				printf("%f", vp.y);
+
+				glViewport(0, 0, vp.x, vp.y);
+				fbo.CreateFrameBuffer(vp.x, vp.y);
+			}
+		
 			ImGui::PopStyleVar();
 
-			ImGui::Image((void*)fbo.GetColorAttachment(), { m_viewportWidth, m_viewportHeight });
+			ImGui::Image((void*)fbo.GetColorAttachment(), { vp.x, vp.y });
 
 			ImGui::End();
 		}

@@ -4,6 +4,9 @@
 #include "../Managers/ImGuiManager.h"
 #include "../Managers/WindowManager.h"
 
+// Renderer
+#include "../Renderer/Viewport.h"
+
 // Utils
 #include "../Utilities/Timer.h"
 
@@ -29,5 +32,6 @@ namespace Queen
 		Timer m_timer;
 		Managers::WindowManager* m_windowManager = nullptr;
 		Managers::ImGuiManager* m_imGuiManager = nullptr;
+		Viewport m_viewport;
 	};
 }

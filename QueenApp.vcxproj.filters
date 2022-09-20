@@ -197,6 +197,9 @@
     <ClInclude Include="src\Renderer\Texture.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+    <ClInclude Include="src\Renderer\Viewport.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="Vendor\lib\glfw3.lib" />

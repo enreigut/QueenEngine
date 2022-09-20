@@ -92,8 +92,6 @@ namespace Queen
 		if (!m_imGuiManager)
 			throw std::exception("ImGui Manager is null!");
 
-		Managers::Viewport vp = { m_windowManager->GetWidth(), m_windowManager->GetHeight() };
-
 		// TODO: REMOVE JUST TESTING
 
 		Scene scene;
@@ -146,11 +144,11 @@ namespace Queen
 			"D:/Dev/Projects/QueenEngine/Assets/Shaders/fragment.frag"
 		);
 
-		glViewport(0, 0, vp.width, vp.height);
-
 		// Create FrameBuffer
+		m_viewport.x = m_windowManager->GetWidth();
+		m_viewport.y = m_windowManager->GetHeight();
 		Renderer::FrameBuffer fbo;
-		fbo.CreateFrameBuffer(m_windowManager->GetWidth(), m_windowManager->GetHeight());
+		fbo.CreateFrameBuffer(m_viewport.x, m_viewport.y);
 
 		while (!m_windowManager->ShouldWindowClose())
 		{
@@ -163,7 +161,7 @@ namespace Queen
 			m_imGuiManager->NewFrame();
 
 			// Render Stuff
-			glm::mat4 projection = glm::perspective(45.0f, vp.width/vp.height, 0.0f, 100.0f);
+			glm::mat4 projection = glm::perspective(45.0f, m_viewport.x/m_viewport.y, 0.0f, 100.0f);
 
 			shader.UseProgram();
 
@@ -184,7 +182,7 @@ namespace Queen
 			// Draw ImGUI Windows
 			m_imGuiManager->CreateDockSpace(&createDockspace);
 			m_imGuiManager->Benchmark(m_timer.p_durationInMs);
-			m_imGuiManager->Viewport(vp, fbo);
+			m_imGuiManager->Viewport(m_viewport, fbo);
 
 			m_imGuiManager->Render();
 
