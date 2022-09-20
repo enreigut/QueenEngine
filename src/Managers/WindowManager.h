@@ -22,6 +22,7 @@ namespace Queen
 			~WindowManager();
 
 			// Getter
+			inline GLFWwindow* GetWnd() const { return m_window; }
 			inline int GetWidth() const { return m_width; }
 			inline int GetHeight() const { return m_height; }
 			inline float GetAspectRatio() const { return m_aspectRatio; }

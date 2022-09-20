@@ -1,12 +1,19 @@
 #include "Application.h"
 
 #include <exception>
+#include <GLM/glm.hpp>
+#include <GLM/ext.hpp>
+
+// TODO: Remove
 #include "../Renderer/Shader.h"
 #include "../Renderer/VertexBuffer.h"
 #include "../Renderer/ElementBuffer.h"
+#include "../Renderer/FrameBuffer.h"
 #include "../Renderer/VertexArrayObject.h"
-#include <GLM/glm.hpp>
-#include <GLM/ext.hpp>
+#include "../ECS/Entity.h"
+#include "../ECS/Component.h"
+#include "../Scenes/Scene.h"
+#include "../Utilities/ObjParser.h"
 
 namespace Queen
 {
@@ -29,6 +36,12 @@ namespace Queen
 				m_windowManager = new Managers::WindowManager();
 
 			m_windowManager->Start();
+
+			// ImGUi Manager
+			if (!m_imGuiManager)
+				m_imGuiManager = new Managers::ImGuiManager();
+
+			m_imGuiManager->Start();
 		}
 		catch (std::exception e)
 		{
@@ -40,18 +53,19 @@ namespace Queen
 
 	void Application::Shutdown()
 	{
-		if (m_windowManager != nullptr)
-		{	
-			try
-			{
-				m_windowManager->Shutdown();
-				delete(m_windowManager);
-			}
-			catch (std::exception e)
-			{
-				// TODO: LOG ERROR
-			}
+		try
+		{
+			m_imGuiManager->Shutdown();
+			delete(m_imGuiManager);
+
+			m_windowManager->Shutdown();
+			delete(m_windowManager);
 		}
+		catch (std::exception e)
+		{
+			// TODO: LOG ERROR
+		}
+		
 	}
 
 	void Application::CreateApplication(const char* name)
@@ -60,29 +74,50 @@ namespace Queen
 			throw std::exception("Window Manager is null!");
 
 		m_windowManager->CreateWindow(name);
+
+		if(!m_imGuiManager)
+			throw std::exception("ImGui Manager is null!");
+		
+		bool createDockspace = true;
+		m_imGuiManager->SetUpImGui(m_windowManager->GetWnd());
 	}
 
 	void Application::Run()
 	{
+		bool createDockspace = true;
+		
 		if (!m_windowManager)
 			throw std::exception("Window Manager is null!");
 
+		if (!m_imGuiManager)
+			throw std::exception("ImGui Manager is null!");
+
+		Managers::Viewport vp = { m_windowManager->GetWidth(), m_windowManager->GetHeight() };
+
 		// TODO: REMOVE JUST TESTING
 
-		std::vector<float> data = {
-			-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-			-0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-			0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
-			0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f,
-		};
+		Scene scene;
 
-		std::vector<unsigned int> indices = {
-			0, 3, 1,
-			0, 2, 3
-		};
+		ECS::Entity e1;
+		
+		ECS::Transform tr = {};
+		tr.p_position = glm::vec3(1.0f, 1.0f, 1.0f);
+		tr.p_rotation = glm::vec3(1.0f, 1.0f, 1.0f);
+		tr.p_scale = glm::vec3(1.0f, 1.0f, 1.0f);
+
+		ObjParser objParser;
+		objParser.Parse("D:/Dev/Projects/QueenEngine/Assets/Models/cube.obj");
+		ECS::Model m = {};
+		m.p_name = objParser.GetObjData().name.c_str();
+		m.p_vertices = objParser.GetObjData().vertices;
+		m.p_indices = objParser.GetObjData().vertexIndices;
+
+		e1.AddComponent<ECS::Transform>(&tr);
+		e1.AddComponent<ECS::Model>(&m);
+		scene.AddEntity(&e1);
 		
 		glm::mat4 model = glm::mat4(1.0f);
-		glm::mat4 viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -1.0f));
+		glm::mat4 viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -10.0f));
 	
 		Renderer::VertexArrayObject vao;
 		Renderer::VertexBuffer vbo;
@@ -95,16 +130,13 @@ namespace Queen
 		vao.BindBuffer();
 
 		vbo.BindBuffer();
-		vbo.BindData(data);
+		vbo.BindData(e1.GetComponent<ECS::Model>()->p_vertices);
 
 		ebo.BindBuffer();
-		ebo.BindData(indices);
+		ebo.BindData(e1.GetComponent<ECS::Model>()->p_indices);
 
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 		glEnableVertexAttribArray(0);
-
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)12);
-		glEnableVertexAttribArray(1);
 
 		vao.UnbindBuffer();
 
@@ -114,15 +146,24 @@ namespace Queen
 			"D:/Dev/Projects/QueenEngine/Assets/Shaders/fragment.frag"
 		);
 
-		glViewport(0, 0, m_windowManager->GetWidth(), m_windowManager->GetHeight());
+		glViewport(0, 0, vp.width, vp.height);
+
+		// Create FrameBuffer
+		Renderer::FrameBuffer fbo;
+		fbo.CreateFrameBuffer(m_windowManager->GetWidth(), m_windowManager->GetHeight());
 
 		while (!m_windowManager->ShouldWindowClose())
 		{
-			m_timer.Start();
+			fbo.Bind();
 
+			m_timer.Start();
 			m_windowManager->EarlyUpdate();
 
-			glm::mat4 projection = glm::perspective(45.0f, m_windowManager->GetAspectRatio(), 0.0f, 10.0f);
+			// ImGUI New Frame
+			m_imGuiManager->NewFrame();
+
+			// Render Stuff
+			glm::mat4 projection = glm::perspective(45.0f, vp.width/vp.height, 0.0f, 100.0f);
 
 			shader.UseProgram();
 
@@ -131,14 +172,29 @@ namespace Queen
 			shader.SetUniformLocationMat4f("projection", projection);
 
 			vao.BindBuffer();
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+			glDrawElements(
+				GL_TRIANGLES, 
+				objParser.GetObjData().vertexIndices.size(), 
+				GL_UNSIGNED_INT, 
+				0
+			);
 
+			fbo.Unbind();
+
+			// Draw ImGUI Windows
+			m_imGuiManager->CreateDockSpace(&createDockspace);
+			m_imGuiManager->Benchmark(m_timer.p_durationInMs);
+			m_imGuiManager->Viewport(vp, fbo);
+
+			m_imGuiManager->Render();
+
+			// fbo.CreateFrameBuffer(m_imGuiManager->GetViewportWidth(), m_imGuiManager->GetViewportHeight());
+
+			m_imGuiManager->LateUpdate(m_windowManager->GetWnd());
 			m_windowManager->LateUpdate();
 			
 			m_timer.Stop();
 			m_timer.DurationInMs();
-
-			std::printf("%f\n", m_timer.p_durationInMs);
 		}
 	}
 }

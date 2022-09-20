@@ -60,6 +60,7 @@ namespace Queen
 			// Set up some config
 			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+			// glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
 
 			// Create window and check that it has been created correctly
 			m_window = glfwCreateWindow(m_width, m_height, name, nullptr, nullptr);
@@ -97,7 +98,6 @@ namespace Queen
 
 		void WindowManager::EarlyUpdate()
 		{
-			glViewport(0, 0, m_width, m_height);
 			glClearColor(0.25f, 0.45f, 0.45f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
 		}

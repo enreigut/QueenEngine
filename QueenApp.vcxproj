@@ -154,14 +154,20 @@
   <ItemGroup>
     <ClCompile Include="src\Application\Application.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Managers\ImGuiManager.cpp" />
     <ClCompile Include="src\Managers\WindowManager.cpp" />
     <ClCompile Include="src\Renderer\ElementBuffer.cpp" />
+    <ClCompile Include="src\Renderer\FrameBuffer.cpp" />
     <ClCompile Include="src\Renderer\Shader.cpp" />
+    <ClCompile Include="src\Renderer\Texture.cpp" />
     <ClCompile Include="src\Renderer\VertexArrayObject.cpp" />
     <ClCompile Include="src\Renderer\VertexBuffer.cpp" />
+    <ClCompile Include="src\Scenes\Scene.cpp" />
     <ClCompile Include="src\Utilities\FileReader.cpp" />
     <ClCompile Include="src\Utilities\ImGuiApi.cpp" />
     <ClCompile Include="src\Utilities\Logger.cpp" />
+    <ClCompile Include="src\Utilities\ObjParser.cpp" />
+    <ClCompile Include="src\Utilities\StringUtils.cpp" />
     <ClCompile Include="src\Utilities\Timer.cpp" />
     <ClCompile Include="Vendor\include\IMGUI\imgui.cpp" />
     <ClCompile Include="Vendor\include\IMGUI\imgui_demo.cpp" />
@@ -173,16 +179,25 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application\Application.h" />
+    <ClInclude Include="src\ECS\Component.h" />
+    <ClInclude Include="src\ECS\Entity.h" />
+    <ClInclude Include="src\ECS\System.h" />
+    <ClInclude Include="src\Managers\ImGuiManager.h" />
     <ClInclude Include="src\Managers\Manager.h" />
     <ClInclude Include="src\Managers\WindowManager.h" />
     <ClInclude Include="src\Renderer\ElementBuffer.h" />
+    <ClInclude Include="src\Renderer\FrameBuffer.h" />
+    <ClInclude Include="src\Renderer\Texture.h" />
     <ClInclude Include="src\Renderer\VertexArrayObject.h" />
     <ClInclude Include="src\Renderer\Buffer.h" />
     <ClInclude Include="src\Renderer\Shader.h" />
     <ClInclude Include="src\Renderer\VertexBuffer.h" />
+    <ClInclude Include="src\Scenes\Scene.h" />
     <ClInclude Include="src\Utilities\FileReader.h" />
     <ClInclude Include="src\Utilities\ImGuiApi.h" />
     <ClInclude Include="src\Utilities\Logger.h" />
+    <ClInclude Include="src\Utilities\ObjParser.h" />
+    <ClInclude Include="src\Utilities\StringUtils.h" />
     <ClInclude Include="src\Utilities\Timer.h" />
     <ClInclude Include="Vendor\include\GLFW\glfw3.h" />
     <ClInclude Include="Vendor\include\GLFW\glfw3native.h" />

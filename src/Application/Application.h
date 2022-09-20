@@ -1,6 +1,7 @@
 #pragma once
 
 // Managers
+#include "../Managers/ImGuiManager.h"
 #include "../Managers/WindowManager.h"
 
 // Utils
@@ -27,5 +28,6 @@ namespace Queen
 	private:
 		Timer m_timer;
 		Managers::WindowManager* m_windowManager = nullptr;
+		Managers::ImGuiManager* m_imGuiManager = nullptr;
 	};
 }

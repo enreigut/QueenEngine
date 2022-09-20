@@ -10,6 +10,7 @@ public:
 
 	// Getters
 	inline const char* GetData() const { return m_data.c_str(); }
+	inline std::string GetDataStr() const { return m_data; }
 
 	// Setters
 
