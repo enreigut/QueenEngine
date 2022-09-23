@@ -5,6 +5,7 @@
 #include <IMGUI/imgui_impl_opengl3.h>
 
 #include "Manager.h"
+#include "../Renderer/BatchRenderer.h"
 #include "../Renderer/FrameBuffer.h"
 #include "../Renderer/Viewport.h"
 
@@ -31,6 +32,7 @@ namespace Queen
 			// Windows
 			void CreateDockSpace(bool* p_open);
 			void Benchmark(float& frameDurationInMs);
+			void RenderStats(Renderer::RenderStats&& stats);
 			void Viewport(Viewport& vp, Renderer::FrameBuffer& fbo);
 
 		private:

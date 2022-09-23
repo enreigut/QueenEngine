@@ -42,6 +42,9 @@ namespace Queen
 				m_imGuiManager = new Managers::ImGuiManager();
 
 			m_imGuiManager->Start();
+
+			// Renderer
+			m_batchRenderer = new Renderer::BatchRenderer();
 		}
 		catch (std::exception e)
 		{
@@ -60,6 +63,8 @@ namespace Queen
 
 			m_windowManager->Shutdown();
 			delete(m_windowManager);
+
+			delete(m_batchRenderer);
 		}
 		catch (std::exception e)
 		{
@@ -97,27 +102,40 @@ namespace Queen
 		Scene scene;
 
 		ECS::Entity e1;
-		
-		ECS::Transform tr = {};
-		tr.p_position = glm::vec3(1.0f, 1.0f, 1.0f);
-		tr.p_rotation = glm::vec3(1.0f, 1.0f, 1.0f);
-		tr.p_scale = glm::vec3(1.0f, 1.0f, 1.0f);
-
 		ObjParser objParser;
-		objParser.Parse("D:/Dev/Projects/QueenEngine/Assets/Models/cube.obj");
+		objParser.Parse("D:/Dev/Projects/QueenEngine/Assets/Models/Monkey.obj");
 		ECS::Model m = {};
 		m.p_name = objParser.GetObjData().name.c_str();
 		m.p_vertices = objParser.GetObjData().vertices;
 		m.p_indices = objParser.GetObjData().vertexIndices;
-
-		e1.AddComponent<ECS::Transform>(&tr);
 		e1.AddComponent<ECS::Model>(&m);
+
+		ECS::Entity e2("Sphere");
+		ObjParser objParser2;
+		objParser2.Parse("D:/Dev/Projects/QueenEngine/Assets/Models/sphere.obj");
+		ECS::Model m2 = {};
+		m2.p_name = objParser2.GetObjData().name.c_str();
+		m2.p_vertices = objParser2.GetObjData().vertices;
+		m2.p_indices = objParser2.GetObjData().vertexIndices;
+		e2.AddComponent<ECS::Model>(&m2);
+
+		ECS::Entity e3("Pinye");
+		ObjParser objParser3;
+		objParser3.Parse("D:/Dev/Projects/QueenEngine/Assets/Models/cube.obj");
+		ECS::Model m3 = {};
+		m3.p_name = objParser3.GetObjData().name.c_str();
+		m3.p_vertices = objParser3.GetObjData().vertices;
+		m3.p_indices = objParser3.GetObjData().vertexIndices;
+		e3.AddComponent<ECS::Model>(&m3);
+		
 		scene.AddEntity(&e1);
+		scene.AddEntity(&e2);
+		scene.AddEntity(&e3);
 		
 		glm::mat4 model = glm::mat4(1.0f);
 		glm::mat4 viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -10.0f));
 	
-		Renderer::VertexArrayObject vao;
+		/*Renderer::VertexArrayObject vao;
 		Renderer::VertexBuffer vbo;
 		Renderer::ElementBuffer ebo;
 
@@ -136,7 +154,10 @@ namespace Queen
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 		glEnableVertexAttribArray(0);
 
-		vao.UnbindBuffer();
+		vao.UnbindBuffer();*/
+
+		m_batchRenderer->LoadSceneVertexData(scene);
+		m_batchRenderer->CreateBuffers();
 
 		Renderer::Shader shader;
 		shader.CreateProgram(
@@ -145,8 +166,8 @@ namespace Queen
 		);
 
 		// Create FrameBuffer
-		m_viewport.x = m_windowManager->GetWidth();
-		m_viewport.y = m_windowManager->GetHeight();
+		m_viewport.x = (float) m_windowManager->GetWidth();
+		m_viewport.y = (float) m_windowManager->GetHeight();
 		Renderer::FrameBuffer fbo;
 		fbo.CreateFrameBuffer(m_viewport.x, m_viewport.y);
 
@@ -169,25 +190,25 @@ namespace Queen
 			shader.SetUniformLocationMat4f("view", viewMatrix);
 			shader.SetUniformLocationMat4f("projection", projection);
 
-			vao.BindBuffer();
+			/*vao.BindBuffer();
 			glDrawElements(
 				GL_TRIANGLES, 
 				objParser.GetObjData().vertexIndices.size(), 
 				GL_UNSIGNED_INT, 
 				0
-			);
+			);*/
+
+			m_batchRenderer->OnUpdate();
 
 			fbo.Unbind();
 
 			// Draw ImGUI Windows
 			m_imGuiManager->CreateDockSpace(&createDockspace);
 			m_imGuiManager->Benchmark(m_timer.p_durationInMs);
+			m_imGuiManager->RenderStats(m_batchRenderer->GetRenderStats());
 			m_imGuiManager->Viewport(m_viewport, fbo);
 
 			m_imGuiManager->Render();
-
-			// fbo.CreateFrameBuffer(m_imGuiManager->GetViewportWidth(), m_imGuiManager->GetViewportHeight());
-
 			m_imGuiManager->LateUpdate(m_windowManager->GetWnd());
 			m_windowManager->LateUpdate();
 			

@@ -158,6 +158,7 @@
     <ClCompile Include="src\Managers\WindowManager.cpp" />
     <ClCompile Include="src\Renderer\ElementBuffer.cpp" />
     <ClCompile Include="src\Renderer\FrameBuffer.cpp" />
+    <ClCompile Include="src\Renderer\BatchRenderer.cpp" />
     <ClCompile Include="src\Renderer\Shader.cpp" />
     <ClCompile Include="src\Renderer\Texture.cpp" />
     <ClCompile Include="src\Renderer\VertexArrayObject.cpp" />
@@ -187,6 +188,7 @@
     <ClInclude Include="src\Managers\WindowManager.h" />
     <ClInclude Include="src\Renderer\ElementBuffer.h" />
     <ClInclude Include="src\Renderer\FrameBuffer.h" />
+    <ClInclude Include="src\Renderer\BatchRenderer.h" />
     <ClInclude Include="src\Renderer\Texture.h" />
     <ClInclude Include="src\Renderer\VertexArrayObject.h" />
     <ClInclude Include="src\Renderer\Buffer.h" />

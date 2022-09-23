@@ -1,6 +1,7 @@
 #pragma once
 
 #include <unordered_map>
+#include <typeinfo>
 #include "Component.h"
 
 namespace Queen

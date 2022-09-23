@@ -5,6 +5,7 @@
 #include "../Managers/WindowManager.h"
 
 // Renderer
+#include "../Renderer/BatchRenderer.h"
 #include "../Renderer/Viewport.h"
 
 // Utils
@@ -32,6 +33,7 @@ namespace Queen
 		Timer m_timer;
 		Managers::WindowManager* m_windowManager = nullptr;
 		Managers::ImGuiManager* m_imGuiManager = nullptr;
+		Renderer::BatchRenderer* m_batchRenderer = nullptr;
 		Viewport m_viewport;
 	};
 }

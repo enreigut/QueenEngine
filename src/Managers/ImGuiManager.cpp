@@ -137,6 +137,17 @@ namespace Queen
 			ImGui::End();
 		}
 
+		void ImGuiManager::RenderStats(Renderer::RenderStats&& stats)
+		{
+			ImGui::Begin("Render Stats");
+
+			ImGui::Text("%d Draw Calls", stats.drawCalls);
+			ImGui::Text("%d Vertices", stats.vertices);
+			ImGui::Text("%d Indices", stats.indices);
+
+			ImGui::End();
+		}
+
 		void ImGuiManager::Viewport(Queen::Viewport& vp, Renderer::FrameBuffer& fbo)
 		{
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
@@ -159,7 +170,7 @@ namespace Queen
 				printf("%f", vp.x);
 				printf("%f", vp.y);
 
-				glViewport(0, 0, vp.x, vp.y);
+				glViewport(0, 0, (GLsizei)vp.x, (GLsizei)vp.y);
 				fbo.CreateFrameBuffer(vp.x, vp.y);
 			}
 		
