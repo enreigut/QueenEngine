@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -159,10 +159,12 @@
     <ClCompile Include="src\Renderer\ElementBuffer.cpp" />
     <ClCompile Include="src\Renderer\FrameBuffer.cpp" />
     <ClCompile Include="src\Renderer\BatchRenderer.cpp" />
+    <ClCompile Include="src\Renderer\RenderingBufferData.cpp" />
     <ClCompile Include="src\Renderer\Shader.cpp" />
     <ClCompile Include="src\Renderer\Texture.cpp" />
     <ClCompile Include="src\Renderer\VertexArrayObject.cpp" />
     <ClCompile Include="src\Renderer\VertexBuffer.cpp" />
+    <ClCompile Include="src\Scenes\Camera.cpp" />
     <ClCompile Include="src\Scenes\Scene.cpp" />
     <ClCompile Include="src\Utilities\FileReader.cpp" />
     <ClCompile Include="src\Utilities\ImGuiApi.cpp" />
@@ -189,12 +191,14 @@
     <ClInclude Include="src\Renderer\ElementBuffer.h" />
     <ClInclude Include="src\Renderer\FrameBuffer.h" />
     <ClInclude Include="src\Renderer\BatchRenderer.h" />
+    <ClInclude Include="src\Renderer\RenderingBufferData.h" />
     <ClInclude Include="src\Renderer\Texture.h" />
     <ClInclude Include="src\Renderer\VertexArrayObject.h" />
     <ClInclude Include="src\Renderer\Buffer.h" />
     <ClInclude Include="src\Renderer\Shader.h" />
     <ClInclude Include="src\Renderer\VertexBuffer.h" />
     <ClInclude Include="src\Renderer\Viewport.h" />
+    <ClInclude Include="src\Scenes\Camera.h" />
     <ClInclude Include="src\Scenes\Scene.h" />
     <ClInclude Include="src\Utilities\FileReader.h" />
     <ClInclude Include="src\Utilities\ImGuiApi.h" />

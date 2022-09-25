@@ -34,6 +34,6 @@ namespace Queen
 		Managers::WindowManager* m_windowManager = nullptr;
 		Managers::ImGuiManager* m_imGuiManager = nullptr;
 		Renderer::BatchRenderer* m_batchRenderer = nullptr;
-		Viewport m_viewport;
+		Viewport* m_viewport = nullptr;
 	};
 }

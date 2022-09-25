@@ -8,6 +8,7 @@
 #include "../Renderer/BatchRenderer.h"
 #include "../Renderer/FrameBuffer.h"
 #include "../Renderer/Viewport.h"
+#include "../Scenes/Camera.h"
 
 namespace Queen
 {
@@ -33,6 +34,7 @@ namespace Queen
 			void CreateDockSpace(bool* p_open);
 			void Benchmark(float& frameDurationInMs);
 			void RenderStats(Renderer::RenderStats&& stats);
+			void ViewportDetails(Camera& camera);
 			void Viewport(Viewport& vp, Renderer::FrameBuffer& fbo);
 
 		private:

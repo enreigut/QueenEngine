@@ -45,6 +45,9 @@ namespace Queen
 
 			// Renderer
 			m_batchRenderer = new Renderer::BatchRenderer();
+
+			// Viewport
+			m_viewport = new Viewport;
 		}
 		catch (std::exception e)
 		{
@@ -65,6 +68,8 @@ namespace Queen
 			delete(m_windowManager);
 
 			delete(m_batchRenderer);
+
+			delete(m_viewport);
 		}
 		catch (std::exception e)
 		{
@@ -98,7 +103,6 @@ namespace Queen
 			throw std::exception("ImGui Manager is null!");
 
 		// TODO: REMOVE JUST TESTING
-
 		Scene scene;
 
 		ECS::Entity e1;
@@ -133,28 +137,6 @@ namespace Queen
 		scene.AddEntity(&e3);
 		
 		glm::mat4 model = glm::mat4(1.0f);
-		glm::mat4 viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -10.0f));
-	
-		/*Renderer::VertexArrayObject vao;
-		Renderer::VertexBuffer vbo;
-		Renderer::ElementBuffer ebo;
-
-		vao.GenerateBuffer();
-		vbo.GenerateBuffer();
-		ebo.GenerateBuffer();
-
-		vao.BindBuffer();
-
-		vbo.BindBuffer();
-		vbo.BindData(e1.GetComponent<ECS::Model>()->p_vertices);
-
-		ebo.BindBuffer();
-		ebo.BindData(e1.GetComponent<ECS::Model>()->p_indices);
-
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-		glEnableVertexAttribArray(0);
-
-		vao.UnbindBuffer();*/
 
 		m_batchRenderer->LoadSceneVertexData(scene);
 		m_batchRenderer->CreateBuffers();
@@ -166,47 +148,44 @@ namespace Queen
 		);
 
 		// Create FrameBuffer
-		m_viewport.x = (float) m_windowManager->GetWidth();
-		m_viewport.y = (float) m_windowManager->GetHeight();
+		m_viewport->x = (float) m_windowManager->GetWidth();
+		m_viewport->y = (float) m_windowManager->GetHeight();
+
 		Renderer::FrameBuffer fbo;
-		fbo.CreateFrameBuffer(m_viewport.x, m_viewport.y);
+		fbo.CreateFrameBuffer(m_viewport->x, m_viewport->y);
 
 		while (!m_windowManager->ShouldWindowClose())
 		{
-			fbo.Bind();
-
 			m_timer.Start();
+
+			fbo.Bind();
 			m_windowManager->EarlyUpdate();
 
 			// ImGUI New Frame
 			m_imGuiManager->NewFrame();
 
-			// Render Stuff
-			glm::mat4 projection = glm::perspective(45.0f, m_viewport.x/m_viewport.y, 0.0f, 100.0f);
+			// Update Camera aspect ratio
+			m_viewport->camera.SetSize(m_viewport->x, m_viewport->y);
+			m_viewport->camera.CalculateViewMatrix();
+			m_viewport->camera.CalculateProjectionMatrix();
 
 			shader.UseProgram();
-
 			shader.SetUniformLocationMat4f("model", model);
-			shader.SetUniformLocationMat4f("view", viewMatrix);
-			shader.SetUniformLocationMat4f("projection", projection);
-
-			/*vao.BindBuffer();
-			glDrawElements(
-				GL_TRIANGLES, 
-				objParser.GetObjData().vertexIndices.size(), 
-				GL_UNSIGNED_INT, 
-				0
-			);*/
-
+			shader.SetUniformLocationMat4f("view", m_viewport->camera.GetViewMatrix());
+			shader.SetUniformLocationMat4f("projection", m_viewport->camera.GetProjectionMatrix());
+			
+			// Here we draw
 			m_batchRenderer->OnUpdate();
 
+			// Unbind fbo, nothing more to render on texture
 			fbo.Unbind();
 
 			// Draw ImGUI Windows
 			m_imGuiManager->CreateDockSpace(&createDockspace);
 			m_imGuiManager->Benchmark(m_timer.p_durationInMs);
 			m_imGuiManager->RenderStats(m_batchRenderer->GetRenderStats());
-			m_imGuiManager->Viewport(m_viewport, fbo);
+			m_imGuiManager->ViewportDetails(m_viewport->camera);
+			m_imGuiManager->Viewport(*m_viewport, fbo);
 
 			m_imGuiManager->Render();
 			m_imGuiManager->LateUpdate(m_windowManager->GetWnd());

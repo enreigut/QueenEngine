@@ -35,11 +35,15 @@ namespace Queen
 					{
 						RenderingBufferData bufferData;
 						m_data.push_back(bufferData);
-						m_data.back().AddData(m->p_vertices, m->p_indices);
+						while(!m_data.back().AddData(m->p_vertices, m->p_indices))
+						{
+							m_data.back().IncreaseMaxDataSize();
+						}
 					}
 					else
 					{
 						bool couldAdd = false;
+
 						for (int i = 0; i < m_data.size(); i++)
 						{
 							if (m_data[i].AddData(m->p_vertices, m->p_indices))
@@ -53,7 +57,10 @@ namespace Queen
 						{
 							RenderingBufferData bufferData;
 							m_data.push_back(bufferData);
-							m_data.back().AddData(m->p_vertices, m->p_indices);
+							while (!m_data.back().AddData(m->p_vertices, m->p_indices))
+							{
+								m_data.back().IncreaseMaxDataSize();
+							}
 						}
 					}
 				}
