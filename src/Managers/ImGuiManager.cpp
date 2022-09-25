@@ -160,9 +160,9 @@ namespace Queen
 			ImGui::DragFloat("Z pos", &camera.p_position.z, 0.1f);
 			ImGui::Separator();
 
-			ImGui::DragFloat("Yaw", &camera.m_yaw);
-			ImGui::DragFloat("Pitch", &camera.m_pitch, -89.0f, 89.0f);
-			ImGui::DragFloat("Roll", &camera.m_roll);
+			ImGui::DragFloat("Yaw", &camera.m_yaw, 0.1f);
+			ImGui::DragFloat("Pitch", &camera.m_pitch, 0.1f, -89.0f, 89.0f);
+			ImGui::DragFloat("Roll", &camera.m_roll, 0.1f);
 			ImGui::Separator();
 
 			ImGui::SliderFloat("FOV", &camera.p_fov, 1.0f, 90.0f);

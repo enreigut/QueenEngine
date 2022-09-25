@@ -105,7 +105,6 @@ namespace Queen
 				glBindVertexArray(0);
 			}
 
-
 			m_renderStats.drawCalls = (unsigned int) m_data.size();
 		}
 
