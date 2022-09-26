@@ -34,6 +34,7 @@ namespace Queen
 			void CreateDockSpace(bool* p_open);
 			void Benchmark(float& frameDurationInMs);
 			void RenderStats(Renderer::RenderStats&& stats);
+			void SceneData(Scene& scene);
 			void ViewportDetails(Camera& camera);
 			void Viewport(Viewport& vp, Renderer::FrameBuffer& fbo);
 

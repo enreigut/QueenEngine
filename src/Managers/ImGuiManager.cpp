@@ -148,6 +148,19 @@ namespace Queen
 			ImGui::End();
 		}
 
+		void ImGuiManager::SceneData(Scene& scene)
+		{
+			ImGui::Begin("Scene Data");
+
+			ImGui::Text("%s", scene.GetSceneName());
+			ImGui::Separator();
+
+			for(auto e: scene.GetEntities())
+				ImGui::Text("%s", e.first);
+
+			ImGui::End();
+		}
+
 		void ImGuiManager::ViewportDetails(Camera& camera)
 		{
 			ImGui::Begin("Viewport Details");
@@ -168,7 +181,6 @@ namespace Queen
 			ImGui::SliderFloat("FOV", &camera.p_fov, 1.0f, 90.0f);
 			ImGui::Text("%f Width", camera.GetWidth());
 			ImGui::Text("%f Height", camera.GetHeight());
-
 
 			ImGui::End();
 		}

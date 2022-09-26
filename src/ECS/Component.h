@@ -19,7 +19,7 @@ namespace Queen
 
 		struct Model : public Component
 		{
-			const char* p_name;
+			std::string p_name;
 			std::vector<float> p_vertices;
 			std::vector<unsigned int> p_indices;
 		};

@@ -1,7 +1,5 @@
 #include "Scene.h"
 
-#include <sstream>
-
 namespace Queen
 {
 	Scene::Scene()
@@ -31,5 +29,18 @@ namespace Queen
 	{
 		if (m_entities.find(entity->GetName()) == m_entities.end())
 			m_entities[entity->GetName()] = entity;
+	}
+
+	std::string Scene::Serialise()
+	{
+		std::stringstream ss;
+
+		ss << "Scene: {\n";
+		ss << "\tm_name: " << m_name << ",\n";
+		for (auto entity : m_entities)
+			ss << "\t" << entity.second->Serialise() << "\n";
+		ss << "}";
+
+		return ss.str();
 	}
 }

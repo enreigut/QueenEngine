@@ -1,6 +1,7 @@
 #pragma once
 
 #include <unordered_map>
+#include <sstream>
 #include "../ECS/Entity.h"
 
 namespace Queen
@@ -14,12 +15,14 @@ namespace Queen
 
 		// Getters
 		ECS::Entity* GetEntity(const char* name);
-		std::unordered_map<const char*, ECS::Entity*> GetEntities() const { return m_entities; }
+		inline const char* GetSceneName() const { return m_name; }
+		inline std::unordered_map<const char*, ECS::Entity*> GetEntities() const { return m_entities; }
 
 		// Setters
 
 		// Derived
 		void AddEntity(ECS::Entity* entity);
+		std::string Serialise();
 
 	private:
 		const char* m_name = "New Scene";

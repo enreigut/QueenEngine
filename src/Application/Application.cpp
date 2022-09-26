@@ -12,8 +12,7 @@
 #include "../Renderer/VertexArrayObject.h"
 #include "../ECS/Entity.h"
 #include "../ECS/Component.h"
-#include "../Scenes/Scene.h"
-#include "../Utilities/ObjParser.h"
+#include "../ECS/System.h"
 
 namespace Queen
 {
@@ -43,6 +42,12 @@ namespace Queen
 
 			m_imGuiManager->Start();
 
+			// Scene Manager
+			if (!m_sceneManager)
+				m_sceneManager = new Managers::SceneManager();
+
+			m_sceneManager->Start();
+
 			// Renderer
 			m_batchRenderer = new Renderer::BatchRenderer();
 
@@ -61,15 +66,19 @@ namespace Queen
 	{
 		try
 		{
+			delete(m_viewport);
+			
+			delete(m_batchRenderer);
+
+			m_sceneManager->Shutdown();
+			delete(m_sceneManager);
+
 			m_imGuiManager->Shutdown();
 			delete(m_imGuiManager);
 
 			m_windowManager->Shutdown();
 			delete(m_windowManager);
 
-			delete(m_batchRenderer);
-
-			delete(m_viewport);
 		}
 		catch (std::exception e)
 		{
@@ -87,58 +96,56 @@ namespace Queen
 
 		if(!m_imGuiManager)
 			throw std::exception("ImGui Manager is null!");
-		
-		bool createDockspace = true;
+
 		m_imGuiManager->SetUpImGui(m_windowManager->GetWnd());
+
+		if (!m_imGuiManager)
+			throw std::exception("ImGui Manager is null!");
+
+		if (!m_sceneManager)
+			throw std::exception("Scene Manager is null!");
+
+		if (!m_batchRenderer)
+			throw std::exception("Renderer is null!");
+
+		if (!m_viewport)
+			throw std::exception("Viewport is null!");
 	}
 
 	void Application::Run()
 	{
 		bool createDockspace = true;
-		
-		if (!m_windowManager)
-			throw std::exception("Window Manager is null!");
-
-		if (!m_imGuiManager)
-			throw std::exception("ImGui Manager is null!");
 
 		// TODO: REMOVE JUST TESTING
-		Scene scene;
+		// Create Scene
+		Scene* s = m_sceneManager->CreateScene("Test Scene");
 
-		ECS::Entity e1;
-		ObjParser objParser;
-		objParser.Parse("D:/Dev/Projects/QueenEngine/Assets/Models/Monkey.obj");
-		ECS::Model m = {};
-		m.p_name = objParser.GetObjData().name.c_str();
-		m.p_vertices = objParser.GetObjData().vertices;
-		m.p_indices = objParser.GetObjData().vertexIndices;
+		// Create Entity
+		ECS::Entity e1("Cube");
+		ECS::LoadSystem loadSystem;
+		ECS::Model m = loadSystem.LoadModel("D:/Dev/Projects/QueenEngine/Assets/Models/cube.obj");
 		e1.AddComponent<ECS::Model>(&m);
 
-		ECS::Entity e2("Sphere");
-		ObjParser objParser2;
-		objParser2.Parse("D:/Dev/Projects/QueenEngine/Assets/Models/sphere.obj");
-		ECS::Model m2 = {};
-		m2.p_name = objParser2.GetObjData().name.c_str();
-		m2.p_vertices = objParser2.GetObjData().vertices;
-		m2.p_indices = objParser2.GetObjData().vertexIndices;
+		ECS::Transform t;
+		t.p_position = glm::vec3(1.0f, 1.0f, 1.0f);
+		t.p_rotation = glm::vec3(1.0f, 1.0f, 1.0f);
+		t.p_scale = glm::vec3(1.0f, 1.0f, 1.0f);
+		e1.AddComponent<ECS::Transform>(&t);
+
+		ECS::Entity e2("Cube 2");
+		ECS::Model m2 = loadSystem.LoadModel("D:/Dev/Projects/QueenEngine/Assets/Models/Monkey.obj");
 		e2.AddComponent<ECS::Model>(&m2);
 
-		ECS::Entity e3("Pinye");
-		ObjParser objParser3;
-		objParser3.Parse("D:/Dev/Projects/QueenEngine/Assets/Models/cube.obj");
-		ECS::Model m3 = {};
-		m3.p_name = objParser3.GetObjData().name.c_str();
-		m3.p_vertices = objParser3.GetObjData().vertices;
-		m3.p_indices = objParser3.GetObjData().vertexIndices;
-		e3.AddComponent<ECS::Model>(&m3);
-		
-		scene.AddEntity(&e1);
-		scene.AddEntity(&e2);
-		scene.AddEntity(&e3);
+		// Add Entity To Scene
+		s->AddEntity(&e1);
+		s->AddEntity(&e2);
+
+		//std::printf("%s", s->Serialise().c_str());
 		
 		glm::mat4 model = glm::mat4(1.0f);
 
-		m_batchRenderer->LoadSceneVertexData(scene);
+		// Load Scene Data to Renderer
+		m_batchRenderer->LoadSceneVertexData(*s);
 		m_batchRenderer->CreateBuffers();
 
 		Renderer::Shader shader;
@@ -184,6 +191,7 @@ namespace Queen
 			m_imGuiManager->CreateDockSpace(&createDockspace);
 			m_imGuiManager->Benchmark(m_timer.p_durationInMs);
 			m_imGuiManager->RenderStats(m_batchRenderer->GetRenderStats());
+			m_imGuiManager->SceneData(*s);
 			m_imGuiManager->ViewportDetails(m_viewport->camera);
 			m_imGuiManager->Viewport(*m_viewport, fbo);
 

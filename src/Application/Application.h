@@ -3,6 +3,7 @@
 // Managers
 #include "../Managers/ImGuiManager.h"
 #include "../Managers/WindowManager.h"
+#include "../Managers/SceneManager.h"
 
 // Renderer
 #include "../Renderer/BatchRenderer.h"
@@ -31,8 +32,13 @@ namespace Queen
 
 	private:
 		Timer m_timer;
+		
+		// Managers
 		Managers::WindowManager* m_windowManager = nullptr;
 		Managers::ImGuiManager* m_imGuiManager = nullptr;
+		Managers::SceneManager* m_sceneManager = nullptr;
+
+		// Renderer
 		Renderer::BatchRenderer* m_batchRenderer = nullptr;
 		Viewport* m_viewport = nullptr;
 	};

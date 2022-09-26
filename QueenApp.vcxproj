@@ -155,6 +155,7 @@
     <ClCompile Include="src\Application\Application.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Managers\ImGuiManager.cpp" />
+    <ClCompile Include="src\Managers\SceneManager.cpp" />
     <ClCompile Include="src\Managers\WindowManager.cpp" />
     <ClCompile Include="src\Renderer\ElementBuffer.cpp" />
     <ClCompile Include="src\Renderer\FrameBuffer.cpp" />
@@ -187,6 +188,7 @@
     <ClInclude Include="src\ECS\System.h" />
     <ClInclude Include="src\Managers\ImGuiManager.h" />
     <ClInclude Include="src\Managers\Manager.h" />
+    <ClInclude Include="src\Managers\SceneManager.h" />
     <ClInclude Include="src\Managers\WindowManager.h" />
     <ClInclude Include="src\Renderer\ElementBuffer.h" />
     <ClInclude Include="src\Renderer\FrameBuffer.h" />
