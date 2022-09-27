@@ -14,8 +14,12 @@
 #include "../ECS/Component.h"
 #include "../ECS/System.h"
 
+#include <thread>
+
 namespace Queen
 {
+
+
 	Application::Application()
 	{
 
@@ -168,14 +172,12 @@ namespace Queen
 			fbo.Bind();
 			m_windowManager->EarlyUpdate();
 
-			// ImGUI New Frame
-			m_imGuiManager->NewFrame();
-
 			// Update Camera aspect ratio
 			m_viewport->camera.SetSize(m_viewport->x, m_viewport->y);
 			m_viewport->camera.CalculateViewMatrix();
 			m_viewport->camera.CalculateProjectionMatrix();
 
+			{
 			shader.UseProgram();
 			shader.SetUniformLocationMat4f("model", model);
 			shader.SetUniformLocationMat4f("view", m_viewport->camera.GetViewMatrix());
@@ -186,12 +188,17 @@ namespace Queen
 
 			// Unbind fbo, nothing more to render on texture
 			fbo.Unbind();
+			}
+
+			// ImGUI New Frame
+			m_imGuiManager->NewFrame();
 
 			// Draw ImGUI Windows
 			m_imGuiManager->CreateDockSpace(&createDockspace);
 			m_imGuiManager->Benchmark(m_timer.p_durationInMs);
 			m_imGuiManager->RenderStats(m_batchRenderer->GetRenderStats());
 			m_imGuiManager->SceneData(*s);
+			m_imGuiManager->ContentBrowserWnd();
 			m_imGuiManager->ViewportDetails(m_viewport->camera);
 			m_imGuiManager->Viewport(*m_viewport, fbo);
 

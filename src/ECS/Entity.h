@@ -95,9 +95,7 @@ namespace Queen
 
 			std::string Serialise()
 			{
-				const char* res;
 				std::stringstream ss;
-				std::string aux;
 
 				ss << "Entity: {\n";
 				ss << "\t\tm_name: " << m_name << ",\n";

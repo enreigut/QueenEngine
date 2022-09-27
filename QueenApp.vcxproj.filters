@@ -224,6 +224,9 @@
     <ClInclude Include="src\Managers\SceneManager.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+    <ClInclude Include="src\Utilities\ContentBrowser.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="Vendor\lib\glfw3.lib" />

@@ -9,6 +9,7 @@
 #include "../Renderer/FrameBuffer.h"
 #include "../Renderer/Viewport.h"
 #include "../Scenes/Camera.h"
+#include "../Utilities/ContentBrowser.h"
 
 namespace Queen
 {
@@ -35,11 +36,12 @@ namespace Queen
 			void Benchmark(float& frameDurationInMs);
 			void RenderStats(Renderer::RenderStats&& stats);
 			void SceneData(Scene& scene);
+			void ContentBrowserWnd();
 			void ViewportDetails(Camera& camera);
 			void Viewport(Viewport& vp, Renderer::FrameBuffer& fbo);
 
 		private:
-
+			ContentBrowser m_contentBrowser;
 		};
 	}
 }

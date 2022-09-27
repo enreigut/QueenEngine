@@ -3,13 +3,15 @@
 #include <exception>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-
 #include <stdio.h>
 
 namespace Queen
 {
 	namespace Managers
 	{
+		static float w = 200.0f;
+		static float h = 0.0f;
+
 		ImGuiManager::ImGuiManager()
 		{
 
@@ -158,6 +160,78 @@ namespace Queen
 			for(auto e: scene.GetEntities())
 				ImGui::Text("%s", e.first);
 
+			ImGui::End();
+		}
+
+		void ImGuiManager::ContentBrowserWnd()
+		{
+			ImGui::Begin("Content Browser");
+
+			// Main Directory
+			ImGui::Text("Main Directory: ");
+			ImGui::SameLine();
+			if (ImGui::Combo("##", &m_contentBrowser.p_count, m_contentBrowser.p_directories, IM_ARRAYSIZE(m_contentBrowser.p_directories), 2))
+			{
+				m_contentBrowser.p_currentPath = m_contentBrowser.p_directories[0];
+			}
+
+			// Show Current Directory
+			ImGui::Text("Current Directory:");
+			ImGui::SameLine();
+			ImGui::Button(m_contentBrowser.p_currentPath.string().c_str());
+
+			// Folders Child
+			FolderAndFile ff = m_contentBrowser.GetDirectoryData();
+			std::string path;
+			
+			ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+			ImGui::BeginChild("Folders", ImVec2(w, 0), true, 
+				ImGuiWindowFlags_HorizontalScrollbar
+			);
+			
+			if (std::filesystem::path(m_contentBrowser.p_directories[0]) != m_contentBrowser.p_currentPath)
+			{
+				if (ImGui::Button("/.."))
+					m_contentBrowser.p_currentPath = m_contentBrowser.p_currentPath.parent_path();
+			}
+			for (auto folder : ff.p_folders)
+			{
+				path = folder.path().string();
+				if (ImGui::Button(path.c_str()))
+				{
+					m_contentBrowser.p_currentPath /= folder.path().filename();
+				}
+			}
+			ImGui::EndChild();
+			
+			ImGui::SameLine();
+
+			h = ImGui::GetContentRegionAvail().y;
+			ImGui::InvisibleButton("vsplitter", ImVec2(5.0f, h));
+			
+			if (ImGui::IsItemHovered())
+			{
+				ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeEW);
+			}
+			
+			if (ImGui::IsItemActive())
+			{
+				ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeEW);
+				w += ImGui::GetIO().MouseDelta.x;
+			}
+
+			ImGui::SameLine();
+
+			ImGui::BeginChild("Files", ImVec2(0, 0), true);
+			
+			for (auto file : ff.p_files)
+			{
+				path = file.path().string();
+				ImGui::Text("%s", path.c_str());
+			}
+			ImGui::EndChild();
+			ImGui::PopStyleVar();
+			
 			ImGui::End();
 		}
 
